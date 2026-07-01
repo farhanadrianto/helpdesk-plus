@@ -79,6 +79,33 @@
     border-left:5px solid #ef4444;
 }
 
+/* NOTIFICATION - DIBUAT RAPI DI BAWAH BOX-BOX */
+.notif-box{
+    background:white;
+    padding:25px;
+    border-radius:16px;
+    margin-top:30px; /* Jarak pas pemisah dari grid box di atasnya */
+    margin-bottom:25px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.notif-title{
+    font-size:20px;
+    font-weight:700;
+    color:#1e293b;
+    margin-bottom:18px;
+}
+
+.notif-item{
+    padding:14px 16px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:10px;
+    margin-bottom:12px;
+    color:#1e293b;
+    font-size:14px;
+}
+
 </style>
 
 <div class="welcome-box">
@@ -93,6 +120,7 @@ Here is your helpdesk ticket summary.
 
 </div>
 
+{{-- GRID STATISTIK BOX --}}
 <div class="dashboard-grid">
 
 <div class="stat-card total">
@@ -196,5 +224,28 @@ Closed Tickets
 </div>
 
 </div>
+
+{{-- NOTIFICATION DI PINDAH DI BAWAH BOX-BOX --}}
+@if($notifications->count() > 0)
+
+<div class="notif-box">
+
+<div class="notif-title">
+🔔 Recent Notifications
+</div>
+
+@foreach($notifications as $notif)
+
+<div class="notif-item">
+
+{{ $notif->notification_status }}
+
+</div>
+
+@endforeach
+
+</div>
+
+@endif
 
 @endsection

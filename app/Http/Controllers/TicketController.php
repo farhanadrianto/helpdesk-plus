@@ -12,12 +12,42 @@ class TicketController extends Controller
 
 public function index()
 {
-    $tickets = DB::table('tickets')
+    $query = DB::table('tickets')
         ->join('categories', 'tickets.category_id', '=', 'categories.id')
-        ->select('tickets.*', 'categories.category_name as category')
-        ->where('tickets.user_id', session('id'))
+        ->select(
+            'tickets.*',
+            'categories.category_name as category'
+        )
+        ->where('tickets.user_id', session('id'));
+
+    // SEARCH
+    if(request('search')){
+
+        $search = request('search');
+
+        $query->where(function($q) use ($search){
+
+            $q->where('tickets.ticket_code', 'like', "%{$search}%")
+              ->orWhere('tickets.title', 'like', "%{$search}%")
+              ->orWhere('categories.category_name', 'like', "%{$search}%")
+              ->orWhere('tickets.priority', 'like', "%{$search}%")
+              ->orWhere('tickets.status', 'like', "%{$search}%");
+
+        });
+
+    }
+
+    // FILTER STATUS
+    if(request('status')){
+
+        $query->where('tickets.status', request('status'));
+
+    }
+
+    $tickets = $query
         ->orderBy('tickets.created_at', 'desc')
-        ->get();
+        ->paginate(5)
+        ->withQueryString();
 
     return view('user.ticket.index', compact('tickets'));
 }
@@ -118,7 +148,7 @@ public function show($id)
 
     public function adminIndex()
     {
-        $tickets = DB::table('tickets')
+        $query = DB::table('tickets')
             ->join('users', 'tickets.user_id', '=', 'users.id')
             ->join('categories', 'tickets.category_id', '=', 'categories.id')
             ->select(
@@ -126,9 +156,37 @@ public function show($id)
                 'users.name as employee',
                 'categories.category_name as category'
             )
-            ->where('tickets.is_archived', 0)
+            ->where('tickets.is_archived', 0);
+
+        // SEARCH
+        if(request('search')){
+
+            $search = request('search');
+
+            $query->where(function($q) use ($search){
+
+                $q->where('tickets.ticket_code', 'like', "%{$search}%")
+                ->orWhere('users.name', 'like', "%{$search}%")
+                ->orWhere('tickets.title', 'like', "%{$search}%")
+                ->orWhere('categories.category_name', 'like', "%{$search}%")
+                ->orWhere('tickets.priority', 'like', "%{$search}%")
+                ->orWhere('tickets.status', 'like', "%{$search}%");
+
+            });
+
+        }
+
+        // FILTER STATUS
+        if(request('status')){
+
+            $query->where('tickets.status', request('status'));
+
+        }
+
+        $tickets = $query
             ->orderBy('tickets.created_at', 'desc')
-            ->get();
+            ->paginate(5)
+            ->withQueryString();
 
         return view('admin.ticket.index', compact('tickets'));
     }
@@ -170,11 +228,20 @@ public function show($id)
 
     public function updateStatus(Request $request, $id)
     {
+        $ticket = DB::table('tickets')
+            ->where('id',$id)
+            ->first();
+
         DB::table('tickets')
             ->where('id',$id)
             ->update([
 
                 'status' => $request->status,
+
+                'notification_status' =>
+                    'Your ticket "' . $ticket->title .
+                    '" is now ' . $request->status,
+
                 'updated_at' => now()
 
             ]);
@@ -210,7 +277,7 @@ public function show($id)
 
     public function archiveIndex()
     {
-        $tickets = DB::table('tickets')
+        $query = DB::table('tickets')
             ->join('users','tickets.user_id','=','users.id')
             ->join('categories','tickets.category_id','=','categories.id')
             ->select(
@@ -218,9 +285,37 @@ public function show($id)
                 'users.name as employee',
                 'categories.category_name as category'
             )
-            ->where('tickets.is_archived',1)
+            ->where('tickets.is_archived',1);
+
+        // SEARCH
+        if(request('search')){
+
+            $search = request('search');
+
+            $query->where(function($q) use ($search){
+
+                $q->where('tickets.ticket_code', 'like', "%{$search}%")
+                ->orWhere('users.name', 'like', "%{$search}%")
+                ->orWhere('tickets.title', 'like', "%{$search}%")
+                ->orWhere('categories.category_name', 'like', "%{$search}%")
+                ->orWhere('tickets.priority', 'like', "%{$search}%")
+                ->orWhere('tickets.status', 'like', "%{$search}%");
+
+            });
+
+        }
+
+        // FILTER STATUS
+        if(request('status')){
+
+            $query->where('tickets.status', request('status'));
+
+        }
+
+        $tickets = $query
             ->orderBy('tickets.created_at','desc')
-            ->get();
+            ->paginate(5)
+            ->withQueryString();
 
         return view('admin.ticket.archive', compact('tickets'));
     }

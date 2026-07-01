@@ -237,6 +237,74 @@ input:focus{
     background:white;
 }
 
+/* STYLE BARU: DEMO ACCOUNT HINT WRAPPER */
+.demo-accounts-box {
+    background: rgba(241, 245, 249, 0.7);
+    border: 1px dashed #cbd5e1;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 24px;
+}
+
+.demo-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.demo-flex {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.account-badge {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 6px 12px;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.role-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    color: white;
+    text-transform: uppercase;
+    min-width: 65px;
+    text-align: center;
+}
+
+.role-admin {
+    background: #475569;
+}
+
+.role-user {
+    background: #0ea5e9;
+}
+
+.account-details {
+    color: #334155;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.account-details strong {
+    color: #1e293b;
+}
+
 /* BUTTON */
 
 button{
@@ -379,8 +447,7 @@ button:hover{
 
     @endif
 
-    <form action="{{ route('login.process') }}"
-          method="POST">
+    <form action="{{ route('login.process') }}" method="POST">
 
         @csrf
 
@@ -406,6 +473,24 @@ button:hover{
             placeholder="Enter your password"
             required>
 
+        </div>
+
+        <div class="demo-accounts-box">
+            <div class="demo-title">💡 Demo Accounts</div>
+            <div class="demo-flex">
+                <div class="account-badge">
+                    <span class="role-pill role-admin">Admin</span>
+                    <div class="account-details">
+                        admin@helpdesk.com &bull; <strong>admin</strong>
+                    </div>
+                </div>
+                <div class="account-badge">
+                    <span class="role-pill role-user">Employee</span>
+                    <div class="account-details">
+                        laksmana@gmail.com &bull; <strong>123456</strong>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <button type="submit">

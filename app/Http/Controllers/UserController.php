@@ -39,12 +39,21 @@ class UserController extends Controller
             ->where('status', 'Closed')
             ->count();
 
+        // NOTIFICATION
+        $notifications = DB::table('tickets')
+            ->where('user_id', $userId)
+            ->whereNotNull('notification_status')
+            ->orderBy('updated_at', 'desc')
+            ->limit(5)
+            ->get();
+
         return view('user.dashboard', compact(
             'totalTickets',
             'openTickets',
             'progressTickets',
             'resolvedTickets',
-            'closedTickets'
+            'closedTickets',
+            'notifications'
         ));
     }
 
