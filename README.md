@@ -148,7 +148,7 @@ Pastikan sudah terinstall:
 
 1. **Clone Repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/farhanadrianto/helpdesk-plus.git
    cd helpdesk-plus
    ```
 
